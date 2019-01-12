@@ -80,5 +80,9 @@ function init_vscode_workspace() {
     echo "    doRun(devMode)" >> $RUNNER_FILE
     echo >> $RUNNER_FILE
 
+    # Create requirements.txt
+    REQS_FILE="$WORKSPACE_DIR/requirements.txt"
+    touch $REQS_FILE
+
     echo "Done."
 }
