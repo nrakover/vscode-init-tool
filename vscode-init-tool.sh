@@ -64,7 +64,7 @@ function init_vscode_workspace() {
     echo "DEBUG_ADDRESS = ('0.0.0.0', 3000)" >> $RUNNER_FILE
     echo >> $RUNNER_FILE
     echo "def doRun(devMode: bool=False):" >> $RUNNER_FILE
-    echo "    print('Running {}...''.format('in DEV mode ' if devMode else ''))" >> $RUNNER_FILE
+    echo "    print('Running {}...'.format('in DEV mode ' if devMode else ''))" >> $RUNNER_FILE
     echo >> $RUNNER_FILE
     echo "if __name__ == '__main__':" >> $RUNNER_FILE
     echo "    import sys" >> $RUNNER_FILE
