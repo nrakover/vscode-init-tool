@@ -27,7 +27,7 @@ function init_vscode_workspace() {
     echo "# Install application dependencies" >> $DOCKERFILE
     echo "RUN python3 -m pip install -r requirements.txt" >> $DOCKERFILE
     echo >> $DOCKERFILE
-    echo 'CMD [ "python3", "run.py", "--dev" ]' >> $DOCKERFILE
+    echo 'CMD [ "python3", "-u", "run.py", "--dev" ]' >> $DOCKERFILE
     echo >> $DOCKERFILE
 
     # Create .vscode directory
