@@ -58,6 +58,21 @@ function init_vscode_workspace() {
     echo '}' >> $DEBUG_CONFIG
     echo >> $DEBUG_CONFIG
 
+    if [[ $PROJECT_LANG == "python" ]]; then
+        # Create python virtual environment
+        VENV_NAME="python_venv"
+        VENV_DIR="$VSC_DIR/$VENV_NAME"
+        python3 -m venv $VENV_DIR
+
+        # Configure worspace to use virtual environment
+        VENV_PYTHON_PATH="\${workspaceFolder}/.vscode/$VENV_NAME/bin/python3"
+        SETTINGS_FILE="$VSC_DIR/settings.json"
+        echo > $SETTINGS_FILE
+        echo "{" >> $SETTINGS_FILE
+        echo "  \"python.pythonPath\": \"$VENV_PYTHON_PATH\"" >> $SETTINGS_FILE
+        echo "}" >> $SETTINGS_FILE
+    fi
+
     # Create runner
     RUNNER_FILE="$WORKSPACE_DIR/run.py"
     echo > $RUNNER_FILE
