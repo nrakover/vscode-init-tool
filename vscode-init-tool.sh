@@ -22,7 +22,7 @@ function init_vscode_workspace() {
     echo >> $DOCKERFILE
     echo "# Application source" >> $DOCKERFILE
     echo "WORKDIR /app" >> $DOCKERFILE
-    echo "ADD . /app" >> $DOCKERFILE
+    echo "COPY . /app" >> $DOCKERFILE
     echo >> $DOCKERFILE
     echo "# Install application dependencies" >> $DOCKERFILE
     echo "RUN python3 -m pip install -r requirements.txt" >> $DOCKERFILE
@@ -79,6 +79,17 @@ function init_vscode_workspace() {
     echo "    " >> $RUNNER_FILE
     echo "    doRun(devMode)" >> $RUNNER_FILE
     echo >> $RUNNER_FILE
+
+    # .dockerignore
+    DOCKERIGNORE_FILE="$WORKSPACE_DIR/.dockerignore"
+    echo > $DOCKERIGNORE_FILE
+    echo "Dockerfile" >> $DOCKERIGNORE_FILE
+    echo ".dockerignore" >> $DOCKERIGNORE_FILE
+    echo ".git" >> $DOCKERIGNORE_FILE
+    echo ".vscode" >> $DOCKERIGNORE_FILE
+    echo ".DS_Store" >> $DOCKERIGNORE_FILE
+    echo ".gitignore" >> $DOCKERIGNORE_FILE
+    echo "README.md" >> $DOCKERIGNORE_FILE
 
     # Create requirements.txt
     REQS_FILE="$WORKSPACE_DIR/requirements.txt"
