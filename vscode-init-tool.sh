@@ -13,6 +13,7 @@ function init_vscode_workspace() {
     echo "Initializing $PROJECT_LANG workspace in $WORKSPACE_DIR ..."
 
     # Create Dockerfile
+    echo " - Dockerfile"
     DOCKERFILE="$WORKSPACE_DIR/Dockerfile"
     echo "FROM python:3-alpine" > $DOCKERFILE
     echo >> $DOCKERFILE
@@ -30,11 +31,24 @@ function init_vscode_workspace() {
     echo 'CMD [ "python3", "-u", "run.py", "--dev" ]' >> $DOCKERFILE
     echo >> $DOCKERFILE
 
+    # .dockerignore
+    echo " - .dockerignore"
+    DOCKERIGNORE_FILE="$WORKSPACE_DIR/.dockerignore"
+    echo > $DOCKERIGNORE_FILE
+    echo "Dockerfile" >> $DOCKERIGNORE_FILE
+    echo ".dockerignore" >> $DOCKERIGNORE_FILE
+    echo ".git" >> $DOCKERIGNORE_FILE
+    echo ".vscode" >> $DOCKERIGNORE_FILE
+    echo ".DS_Store" >> $DOCKERIGNORE_FILE
+    echo ".gitignore" >> $DOCKERIGNORE_FILE
+    echo "README.md" >> $DOCKERIGNORE_FILE
+
     # Create .vscode directory
     VSC_DIR="$WORKSPACE_DIR/.vscode"
     mkdir $VSC_DIR
 
     # Create VS Code debug configurations
+    echo " - launch.json for debug configurations"
     DEBUG_CONFIG="$VSC_DIR/launch.json"
     echo '{' > $DEBUG_CONFIG
     echo '    // Use IntelliSense to learn about possible attributes.' >> $DEBUG_CONFIG
@@ -62,8 +76,10 @@ function init_vscode_workspace() {
     VENV_NAME="python_venv"
     VENV_DIR="$VSC_DIR/$VENV_NAME"
     python3 -m venv $VENV_DIR
+    echo " - python3 venv at $VENV_DIR"
 
     # Configure worspace to use virtual environment
+    echo " - settings.json for workspace preferences"
     VENV_PYTHON_PATH="\${workspaceFolder}/.vscode/$VENV_NAME/bin/python3"
     SETTINGS_FILE="$VSC_DIR/settings.json"
     echo > $SETTINGS_FILE
@@ -72,6 +88,7 @@ function init_vscode_workspace() {
     echo "}" >> $SETTINGS_FILE
 
     # Create workspace task configurations
+    echo " - tasks.json for build task configurations"
     TASKS_FILE="$VSC_DIR/tasks.json"
     WORKSPACE_BASEPATH=${WORKSPACE_DIR##*/}
     echo "{" >> $TASKS_FILE
@@ -138,17 +155,6 @@ function init_vscode_workspace() {
     echo "    " >> $RUNNER_FILE
     echo "    doRun(devMode)" >> $RUNNER_FILE
     echo >> $RUNNER_FILE
-
-    # .dockerignore
-    DOCKERIGNORE_FILE="$WORKSPACE_DIR/.dockerignore"
-    echo > $DOCKERIGNORE_FILE
-    echo "Dockerfile" >> $DOCKERIGNORE_FILE
-    echo ".dockerignore" >> $DOCKERIGNORE_FILE
-    echo ".git" >> $DOCKERIGNORE_FILE
-    echo ".vscode" >> $DOCKERIGNORE_FILE
-    echo ".DS_Store" >> $DOCKERIGNORE_FILE
-    echo ".gitignore" >> $DOCKERIGNORE_FILE
-    echo "README.md" >> $DOCKERIGNORE_FILE
 
     # Create requirements.txt
     REQS_FILE="$WORKSPACE_DIR/requirements.txt"
