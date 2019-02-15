@@ -58,20 +58,64 @@ function init_vscode_workspace() {
     echo '}' >> $DEBUG_CONFIG
     echo >> $DEBUG_CONFIG
 
-    if [[ $PROJECT_LANG == "python" ]]; then
-        # Create python virtual environment
-        VENV_NAME="python_venv"
-        VENV_DIR="$VSC_DIR/$VENV_NAME"
-        python3 -m venv $VENV_DIR
+    # Create python virtual environment
+    VENV_NAME="python_venv"
+    VENV_DIR="$VSC_DIR/$VENV_NAME"
+    python3 -m venv $VENV_DIR
 
-        # Configure worspace to use virtual environment
-        VENV_PYTHON_PATH="\${workspaceFolder}/.vscode/$VENV_NAME/bin/python3"
-        SETTINGS_FILE="$VSC_DIR/settings.json"
-        echo > $SETTINGS_FILE
-        echo "{" >> $SETTINGS_FILE
-        echo "  \"python.pythonPath\": \"$VENV_PYTHON_PATH\"" >> $SETTINGS_FILE
-        echo "}" >> $SETTINGS_FILE
-    fi
+    # Configure worspace to use virtual environment
+    VENV_PYTHON_PATH="\${workspaceFolder}/.vscode/$VENV_NAME/bin/python3"
+    SETTINGS_FILE="$VSC_DIR/settings.json"
+    echo > $SETTINGS_FILE
+    echo "{" >> $SETTINGS_FILE
+    echo "  \"python.pythonPath\": \"$VENV_PYTHON_PATH\"" >> $SETTINGS_FILE
+    echo "}" >> $SETTINGS_FILE
+
+    # Create workspace task configurations
+    TASKS_FILE="$VSC_DIR/tasks.json"
+    WORKSPACE_BASEPATH=${WORKSPACE_DIR##*/}
+    echo "{" >> $TASKS_FILE
+    echo "    \"version\": \"2.0.0\"," >> $TASKS_FILE
+    echo "    \"tasks\": [" >> $TASKS_FILE
+    echo "        {" >> $TASKS_FILE
+    echo "            \"label\": \"Install Deps\"," >> $TASKS_FILE
+    echo "            \"type\": \"shell\"," >> $TASKS_FILE
+    echo "            \"command\": \"python3 -m pip install -r \${workspaceFolder}/requirements.txt\"," >> $TASKS_FILE
+    echo "            \"options\": {" >> $TASKS_FILE
+    echo "                \"cwd\": \"\${workspaceFolder}/.vscode/$VENV_NAME/bin/\"" >> $TASKS_FILE
+    echo "            }," >> $TASKS_FILE
+    echo "            \"problemMatcher\": []" >> $TASKS_FILE
+    echo "        }," >> $TASKS_FILE
+    echo "        {" >> $TASKS_FILE
+    echo "            \"label\": \"Build Docker Image\"," >> $TASKS_FILE
+    echo "            \"type\": \"shell\"," >> $TASKS_FILE
+    echo "            \"command\": \"docker build --rm -t \${input:imageName} .\"," >> $TASKS_FILE
+    echo "            \"options\": {" >> $TASKS_FILE
+    echo "                \"cwd\": \"\${workspaceFolder}\"" >> $TASKS_FILE
+    echo "            }," >> $TASKS_FILE
+    echo "            \"problemMatcher\": []" >> $TASKS_FILE
+    echo "        }," >> $TASKS_FILE
+    echo "        {" >> $TASKS_FILE
+    echo "            \"label\": \"Build\"," >> $TASKS_FILE
+    echo "            \"dependsOn\": [" >> $TASKS_FILE
+    echo "                \"Install Deps\"," >> $TASKS_FILE
+    echo "                \"Build Docker Image\"" >> $TASKS_FILE
+    echo "            ]," >> $TASKS_FILE
+    echo "            \"group\": {" >> $TASKS_FILE
+    echo "                \"kind\": \"build\"," >> $TASKS_FILE
+    echo "                \"isDefault\": true" >> $TASKS_FILE
+    echo "            }" >> $TASKS_FILE
+    echo "        }" >> $TASKS_FILE
+    echo "    ]," >> $TASKS_FILE
+    echo "    \"inputs\": [" >> $TASKS_FILE
+    echo "        {" >> $TASKS_FILE
+    echo "            \"type\": \"promptString\"," >> $TASKS_FILE
+    echo "            \"id\": \"imageName\"," >> $TASKS_FILE
+    echo "            \"description\": \"Name your image.\"," >> $TASKS_FILE
+    echo "            \"default\": \"$WORKSPACE_BASEPATH:local\"" >> $TASKS_FILE
+    echo "        }" >> $TASKS_FILE
+    echo "    ]" >> $TASKS_FILE
+    echo "}" >> $TASKS_FILE
 
     # Create runner
     RUNNER_FILE="$WORKSPACE_DIR/run.py"
