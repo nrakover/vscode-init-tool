@@ -104,7 +104,7 @@ function init_vscode_workspace() {
     echo "        {" >> $TASKS_FILE
     echo "            \"label\": \"Build Docker Image\"," >> $TASKS_FILE
     echo "            \"type\": \"shell\"," >> $TASKS_FILE
-    echo "            \"command\": \"docker build --rm -t \${input:imageName} .\"," >> $TASKS_FILE
+    echo "            \"command\": \"docker build --pull --rm -t \${input:imageName} .\"," >> $TASKS_FILE
     echo "            \"options\": {" >> $TASKS_FILE
     echo "                \"cwd\": \"\${workspaceFolder}\"" >> $TASKS_FILE
     echo "            }," >> $TASKS_FILE
