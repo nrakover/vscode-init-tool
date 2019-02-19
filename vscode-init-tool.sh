@@ -73,9 +73,10 @@ function init_vscode_workspace() {
     echo >> $DEBUG_CONFIG
 
     # Create python virtual environment
-    VENV_NAME="python_venv"
+    VENV_NAME=".pyenv"
     VENV_DIR="$VSC_DIR/$VENV_NAME"
     python3 -m venv $VENV_DIR
+    $VENV_DIR/bin/python3 -m pip install ptvsd==4.2.0 # install debugger library
     echo " - python3 venv at $VENV_DIR"
 
     # Configure worspace to use virtual environment
@@ -97,10 +98,7 @@ function init_vscode_workspace() {
     echo "        {" >> $TASKS_FILE
     echo "            \"label\": \"Install Deps\"," >> $TASKS_FILE
     echo "            \"type\": \"shell\"," >> $TASKS_FILE
-    echo "            \"command\": \"python3 -m pip install -r \${workspaceFolder}/requirements.txt\"," >> $TASKS_FILE
-    echo "            \"options\": {" >> $TASKS_FILE
-    echo "                \"cwd\": \"\${workspaceFolder}/.vscode/$VENV_NAME/bin/\"" >> $TASKS_FILE
-    echo "            }," >> $TASKS_FILE
+    echo "            \"command\": \"\${workspaceFolder}/.vscode/$VENV_NAME/bin/python3 -m pip install -r \${workspaceFolder}/requirements.txt\"," >> $TASKS_FILE
     echo "            \"problemMatcher\": []" >> $TASKS_FILE
     echo "        }," >> $TASKS_FILE
     echo "        {" >> $TASKS_FILE
